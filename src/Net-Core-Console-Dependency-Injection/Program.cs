@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Hosting.Internal;
 using System;
 
 namespace Net_Core_Console_Dependency_Injection
@@ -8,23 +9,25 @@ namespace Net_Core_Console_Dependency_Injection
     {
         static void Main(string[] args)
         {
-            var host = BuildContainer(args);
+            var container = BuildContainer(args);
 
-            var instance = host.Services.GetRequiredService<Foo>();
+            var instance = container.GetRequiredService<Foo>();
 
             Console.WriteLine(instance.Env);
 
             Console.ReadLine();
         }
 
-        static IHost BuildContainer(string[] args)
+        static ServiceProvider BuildContainer(string[] args)
         {
-            return Host.CreateDefaultBuilder(args)
-                .ConfigureServices(x =>
-                {
-                    x.AddTransient<Foo>();
-                })
-                .Build();
+            var services = new ServiceCollection();
+
+            services.AddTransient<Foo>();
+
+            services.AddSingleton<IHostEnvironment, HostingEnvironment>();
+
+            return services.BuildServiceProvider();
+
         }
     }
 
