@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Net-Core-Console-Dependency-Injection": {
+      "commandName": "Project",
+      "commandLineArgs": "--environment Development"
+    }
+  }
+}
